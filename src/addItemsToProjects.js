@@ -53,7 +53,7 @@ function addItemsToProject() {
         editBtn.setAttribute("id", `task-${itemsContainer.children.length}`);
 
         listItemContainer.append(newItem, newLabel, dueDate, priorityStatus, editBtn);
-        createRemoveItemBtn(newItem, newLabel, dueDate, priorityStatus, editBtn, listItemContainer);
+        createRemoveItemBtn(newItem, listItemContainer);
 
         editBtnAction(listItemContainer);
         cancelDialogBtn();
@@ -101,12 +101,8 @@ function addDescriptionToItems(newItem, newLabel) {
 }
 
 // creates the Remove Button associated wtih each item task 
-function createRemoveItemBtn(newItem, newLabel, newDueDate, newPriorityStatus, newEditBtn, listItemContainer) {
+function createRemoveItemBtn(newItem, listItemContainer) {
     let item = newItem;
-    let label = newLabel;
-    let editBtn = newEditBtn;
-    let dueDate = newDueDate;
-    let priorityStatus = newPriorityStatus;
 
     const removeItemBtn = document.createElement("button");
     removeItemBtn.classList.add("remove-item-btn");
@@ -141,6 +137,7 @@ function editDialog(listItemContainer) {
     dueDateLabel.textContent = "Due Date: ";
 
     const dueDateInput = document.createElement("input");
+    dueDateInput.setAttribute("type", "date");
     dueDateInput.setAttribute("id", "due-date");
     dueDateInput.setAttribute("name", "due-date");
 
