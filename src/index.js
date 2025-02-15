@@ -1,7 +1,9 @@
 import "./styles.css";
-import { displayProjectsOverview } from "./projectsOverview";
+import { projectsOverview } from "./projectsOverview";
+import { displayProjectPage, addItemsToProject, addDescriptionToItems } from "./addItemsToProjects";
 
 let myProjects = [];
+const content = document.querySelector("div#content")
 
 class ToDoItem {
     constructor(title, description, dueDate, priority) {
@@ -23,15 +25,15 @@ class Project {
     }
 }
 
-// item and project are instances of class ToDoItem and Project
-function addItemToProject(item, project) {
-    if (!project.toDoList) {
-        project.toDoList = [];
-    }
+let project1 = new Project("Sample Project 1", "Description for Sample Project 1");
+project1.createProject();
 
-    project.toDoList.push(item);
-}
+let project2 = new Project("Sample Project 2", "Description for Sample Project 2");
+project2.createProject();
 
-document.addEventListener('DOMContentLoaded', displayProjectsOverview());
+// document.addEventListener('DOMContentLoaded', projectsOverview()); // this loads up the overview homepage on connect
 
-export { Project, myProjects };
+displayProjectPage(project1);
+addItemsToProject();
+
+export { content, ToDoItem, Project, myProjects };

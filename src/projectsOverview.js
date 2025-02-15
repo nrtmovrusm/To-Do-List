@@ -1,16 +1,63 @@
-import { Project, myProjects } from "./index.js";
+import { content, Project, myProjects } from "./index.js";
 
-
-function displayProjectsOverview() {
-    const content = document.querySelector("div#content");
+function projectsOverview() {
+    content.replaceChildren();
 
     const pageTitle = document.createElement("div")
     pageTitle.classList.add("page-title");
     pageTitle.textContent = "OVERVIEW OF PROJECTS";
 
+    content.append(pageTitle);
+
+    addProjects();
+
+    displayProjects();
+}
+
+
+function displayProjects() {
+    let projectsContainer;
+
+    if (document.querySelector(".projects-container")) {
+        projectsContainer = document.querySelector(".projects-container")
+        projectsContainer.replaceChildren();
+    } else {
+        projectsContainer = document.createElement("div");
+        projectsContainer.classList.add("projects-container");
+    }
+
+    for (const [index, project] of myProjects.entries()) {
+        const projectContainer = document.createElement("div");
+        projectContainer.classList.add("project-container");
+
+        const titleOfProject = document.createElement("div");
+        titleOfProject.classList.add("project-title");
+        titleOfProject.textContent = `${project.projectTitle}`;
+
+        const btnContainer = document.createElement("div");
+        btnContainer.classList.add("project-btn-container");
+        const removeProjectBtn = document.createElement("button");
+        removeProjectBtn.classList.add("remove-project-btn");
+        removeProjectBtn.textContent = "Remove";
+        removeProjectBtn.id = `${index}`;
+
+        removeProjectBtn.addEventListener("click", (e) => {
+            myProjects.splice(Number(e.target.id), 1);
+            displayProjects(); 
+        })
+
+        btnContainer.append(removeProjectBtn);
+        projectContainer.append(titleOfProject, btnContainer);
+        projectsContainer.append(projectContainer);
+    }
+    content.append(projectsContainer);
+}
+
+
+function addProjects() {
     const addProjectBtn = document.createElement("button");
     addProjectBtn.classList.add("add-project-btn");
-    addProjectBtn.textContent = "Add Project";
+    addProjectBtn.textContent = "Add New Project";
 
     const outputBox = document.createElement("output");
 
@@ -55,7 +102,7 @@ function displayProjectsOverview() {
             addedProject.createProject();
             addTitleInput.value = "";
             addDescrInput.value = "";
-            displayProjectsOverview();
+            displayProjects();
             addProjectDialog.returnValue = addedProject.projectTitle;
             addProjectDialog.close();
         }
@@ -79,34 +126,7 @@ function displayProjectsOverview() {
     addForm.append(addTitleLabel, addTitleInput, addDescLabel, addDescrInput, dialogBtnsContainer);
     addProjectDialog.append(addForm);
 
-    const projectsContainer = document.createElement("div");
-    projectsContainer.classList.add("projects-container");
-
-    for (const [index, project] of myProjects.entries()) {
-        const projectContainer = document.createElement("div");
-        projectContainer.classList.add("project-container");
-
-        const titleOfProject = document.createElement("div");
-        titleOfProject.classList.add("project-title");
-        titleOfProject.textContent = `${project.projectTitle}`;
-
-        const btnContainer = document.createElement("div");
-        btnContainer.classList.add("project-btn-container");
-        const removeProjectBtn = document.createElement("button");
-        removeProjectBtn.classList.add("remove-project-btn");
-        removeProjectBtn.textContent = "Remove";
-
-        removeProjectBtn.addEventListener("click", (e) => {
-            myProjects.splice(Number(e.target.id), 1);
-            displayProjectsOverview(); 
-        })
-
-        btnContainer.append(removeProjectBtn);
-        projectContainer.append(titleOfProject, btnContainer);
-        projectsContainer.append(projectContainer);
-    }
-
-    content.append(pageTitle, addProjectBtn, outputBox, projectsContainer, addProjectDialog);
+    content.append(addProjectBtn, outputBox, addProjectDialog);
 }
 
-export { displayProjectsOverview };
+export { projectsOverview };
