@@ -1,6 +1,6 @@
 import "./styles.css";
 import { projectsOverview } from "./projectsOverview";
-import { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog } from "./addItemsToProjects";
+import { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction } from "./addItemsToProjects";
 
 let myProjects = [];
 const content = document.querySelector("div#content")
@@ -35,6 +35,5 @@ project2.createProject();
 displayProjectPage(project1);
 editDialog();
 addItemsToProject();
-
 
 export { content, ToDoItem, Project, myProjects };

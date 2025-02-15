@@ -39,26 +39,34 @@ function addItemsToProject() {
         newItem.setAttribute("value", "");
         newItem.setAttribute("id", `task-${itemsContainer.children.length}`);
 
+        const dueDate = document.createElement("div");
+        dueDate.classList.add("due-date-div");
+        dueDate.setAttribute("id", `task-${itemsContainer.children.length}`);
+
+        const priorityStatus = document.createElement("div");
+        priorityStatus.classList.add("priority-status-div");
+        priorityStatus.setAttribute("id", `task-${itemsContainer.children.length}`);
+
         const editBtn = document.createElement("button");
         editBtn.classList.add("edit-btn");
         editBtn.textContent = "Edit";
         editBtn.setAttribute("id", `task-${itemsContainer.children.length}`);
 
-        listItemContainer.append(newItem, newLabel, editBtn);
-        createRemoveItemBtn(newItem, newLabel, editBtn, listItemContainer)
+        listItemContainer.append(newItem, newLabel, dueDate, priorityStatus, editBtn);
+        createRemoveItemBtn(newItem, newLabel, dueDate, priorityStatus, editBtn, listItemContainer);
 
-        editBtn.addEventListener("click", () => {
-            const editDialog = document.querySelector("dialog");
-            editDialog.showModal();
-        });
+        editBtnAction(listItemContainer);
+        cancelDialogBtn();
 
         addDescriptionToItems(newItem, newLabel);
 
-        itemsContainer.append(listItemContainer)
+        itemsContainer.append(listItemContainer);
+
     })
 
     content.append(itemsContainer, addItemsBtn);
-}
+    submitBtnAction()
+};
 
 // Handles when pressing "Enter" or "Blur" event occurs after text input into the field
 function addDescriptionToItems(newItem, newLabel) {
@@ -93,10 +101,12 @@ function addDescriptionToItems(newItem, newLabel) {
 }
 
 // creates the Remove Button associated wtih each item task 
-function createRemoveItemBtn(newItem, newLabel, newEditBtn, listItemContainer) {
+function createRemoveItemBtn(newItem, newLabel, newDueDate, newPriorityStatus, newEditBtn, listItemContainer) {
     let item = newItem;
     let label = newLabel;
     let editBtn = newEditBtn;
+    let dueDate = newDueDate;
+    let priorityStatus = newPriorityStatus;
 
     const removeItemBtn = document.createElement("button");
     removeItemBtn.classList.add("remove-item-btn");
@@ -110,8 +120,9 @@ function createRemoveItemBtn(newItem, newLabel, newEditBtn, listItemContainer) {
     listItemContainer.append(removeItemBtn);
 }
 
-// edit button listener function
-function editDialog() {
+// create editDialog
+
+function editDialog(listItemContainer) { 
     const editDialog = document.createElement("dialog");
     editDialog.id = "edit-dialog";
     const editForm = document.createElement("form");
@@ -146,40 +157,13 @@ function editDialog() {
     
     const submitBtn = document.createElement("button");
     submitBtn.classList.add("submit-btn");
-    submitBtn.setAttribute("value", "default"); // sets submit button return value to default
     submitBtn.textContent = "Submit";
+
     const cancelBtn = document.createElement("button");
     cancelBtn.classList.add("cancel-btn");
     cancelBtn.setAttribute("formnovalidate", "true");
     cancelBtn.setAttribute("value", "default");
     cancelBtn.textContent = "Cancel";
-
-    submitBtn.addEventListener("click", () => {
-        if (!editForm.checkValidity()) {
-            alert("Please fill out all of the required elements.");
-        } else {
-            let editedItemTask = editItemTaskInput.value;
-            let editedDueDate = dueDateInput.value;
-            let editedPriorityStatus = priorityStatusInput.value;
-
-            editItemTaskInput.value = "";
-            dueDateInput.value = "";
-            priorityStatusInput.value = "";
-
-            editDialog.close();
-        }
-    });
-
-    editDialog.addEventListener("close", () => {
-        // new values will be created into the text box on close 
-        if (editDialog.returnValue === "default") {
-            return;
-        } else {
-            // empty out list-item-container with child elements
-            // add corresponding input values of editedItemTask, editedDueDate, and editedPriorityStatus to list-item-container
-            // empty out input values for next form
-        }
-    })
 
     dialogBtnsContainer.append(submitBtn, cancelBtn);
     editForm.append(editItemTaskLabel, editItemTaskInput, dueDateLabel, dueDateInput, priorityStatusLabel, priorityStatusInput);
@@ -189,5 +173,73 @@ function editDialog() {
 }
 
 
+function cancelDialogBtn() {
+    const cancelBtn = document.querySelector(".cancel-btn");
+    const editDialog = document.querySelector("dialog");
+    cancelBtn.addEventListener("click", () => {
+        editDialog.close();
+    })
+}
 
-export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog }
+
+function editBtnAction(listItemContainer) {
+    const allEditBtns = listItemContainer.querySelectorAll(".edit-btn");
+    const editDialog = document.querySelector("dialog");
+    const taskNameDialog = document.querySelector("#edit-item-task");
+    const dueDateDialog = document.querySelector("#due-date");
+    const priorityStatusDialog = document.querySelector("#priority-status");
+
+    allEditBtns.forEach((editBtn) => {
+        editBtn.addEventListener("click", (e) => {
+            const identification = e.target.id;
+            const inputDisplay = document.querySelector(`input#${identification}`);
+            const labelDisplay = document.querySelector(`label#${identification}`);
+            const dueDateDisplay = document.querySelector(`.due-date-div#${identification}`);
+            const priorityStatusDisplay = document.querySelector(`.priority-status-div#${identification}`);
+
+            // pull up the edit Dialog module with the specific values of the items being edited
+            taskNameDialog.value = labelDisplay.textContent;
+            dueDateDialog.value = dueDateDisplay.textContent;
+            priorityStatusDialog.value = priorityStatusDisplay.textContent;
+            editDialog.showModal();
+
+            // submit btn needs to be linked to which edit button was pressed to update the right field
+            const submitBtn = document.querySelector(".submit-btn");
+            submitBtn.id = e.target.id;
+
+            console.log(`After edit, before submit button: ${labelDisplay.id}`);
+
+        })
+    })
+}
+
+
+function submitBtnAction() {
+    // this submitBtn ID will be updated with ID by edit button since submit only shows up after edit clicked
+    const submitBtn = document.querySelector(".submit-btn"); 
+
+    const editDialog = document.querySelector("dialog");
+    const taskNameDialog = document.querySelector("#edit-item-task");
+    const dueDateDialog = document.querySelector("#due-date");
+    const priorityStatusDialog = document.querySelector("#priority-status");
+
+    submitBtn.addEventListener("click", (e) => {
+        const identification = e.target.id;
+        console.log(`Submit button inside submitBtnAction click listener: ${submitBtn.id} and ${e.target.id}`);
+
+        const inputDisplay = document.querySelector(`input#${identification}`);
+        const labelDisplay = document.querySelector(`label#${identification}`);
+        const dueDateDisplay = document.querySelector(`.due-date-div#${identification}`);
+        const priorityStatusDisplay = document.querySelector(`.priority-status-div#${identification}`);
+        
+        inputDisplay.setAttribute("type", "checkbox");
+        labelDisplay.textContent = taskNameDialog.value;
+        dueDateDisplay.textContent = dueDateDialog.value;
+        priorityStatusDisplay.textContent = priorityStatusDialog.value;
+
+        editDialog.close();
+    })
+}
+
+
+export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction }
