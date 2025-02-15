@@ -1,4 +1,4 @@
-import { ToDoItem, Project, content } from "./index.js";
+import { content } from "./index.js";
 
 function displayProjectPage(project) {
     const projectWithItemsContainer = document.createElement("div");
@@ -145,9 +145,25 @@ function editDialog(listItemContainer) {
     priorityStatusLabel.setAttribute("for", "priority-status");
     priorityStatusLabel.textContent = "Priority Status: "
 
-    const priorityStatusInput = document.createElement("input");
+    const priorityStatusInput = document.createElement("select");
     priorityStatusInput.setAttribute("id", "priority-status");
     priorityStatusInput.setAttribute("name", "priority-status");
+    
+    const optionHigh = document.createElement("option");
+    optionHigh.setAttribute("value", "high");
+    optionHigh.textContent = "High";
+
+    const optionNormal = document.createElement("option");
+    optionNormal.setAttribute("value", "normal");
+    optionNormal.textContent = "Normal";
+
+    const optionLow = document.createElement("option");
+    optionLow.setAttribute("value", "low");
+    optionLow.textContent = "Low";
+
+    priorityStatusInput.append(optionHigh, optionNormal, optionLow);
+
+
 
     const dialogBtnsContainer = document.createElement("div");
     dialogBtnsContainer.classList.add("dialog-btns-container");

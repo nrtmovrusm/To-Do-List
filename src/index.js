@@ -1,6 +1,6 @@
 import "./styles.css";
 import { projectsOverview } from "./projectsOverview";
-import { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction } from "./addItemsToProjects";
+import { displayProjectPage, addItemsToProject, editDialog, } from "./addItemsToProjects";
 
 let myProjects = [];
 const content = document.querySelector("div#content")
