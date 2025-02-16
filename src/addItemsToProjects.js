@@ -253,14 +253,47 @@ function submitBtnAction() {
     })
 }
 
+// modifying to include sort by priority date AND due date 
+
 function sortContainer() {
     const itemsContainer = document.querySelector(".items-container");
     const items = Array.from(itemsContainer.getElementsByClassName("list-item-container"));
 
     items.sort((a,b) => {
+
+        let priorityA = a.querySelector(".priority-status-div").textContent;
+        let priorityB = b.querySelector(".priority-status-div").textContent;
+
+        if (priorityA == "high") {
+            priorityA = -1;
+        } else if (priorityA == "normal") {
+            priorityA = 0;
+        } else if (priorityA == "low") {
+            priorityA = 1;
+        } else {
+            priorityA = 2;
+        }
+
+        if (priorityB == "high") {
+            priorityB = -1;
+        } else if (priorityB == "normal") {
+            priorityB = 0;
+        } else if (priorityA == "low") {
+            priorityB = 1;
+        } else {
+            priorityB = 2;
+        }
+
+        return priorityA - priorityB;
+    })
+
+    console.log(`after priority sorting: ${items}`);
+
+    items.sort((a,b) => {
         const dateA = new Date(a.querySelector(".due-date-div").textContent);
         const dateB = new Date(b.querySelector(".due-date-div").textContent);
 
+        // for empty columns
         const isValidDateA = !isNaN(dateA);
         const isValidDateB = !isNaN(dateB);
 
@@ -275,11 +308,10 @@ function sortContainer() {
         }
     });
 
-    console.log(items);
+    console.log(`after priority AND due date sorting: ${items}`);
 
     items.forEach(item => itemsContainer.appendChild(item));
 
 }
-
 
 export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction, sortContainer }
