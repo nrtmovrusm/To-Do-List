@@ -12,6 +12,7 @@ function projectsOverview() {
     addProjects();
 
     displayProjects();
+
 }
 
 
@@ -50,7 +51,29 @@ function displayProjects() {
         projectContainer.append(titleOfProject, btnContainer);
         projectsContainer.append(projectContainer);
     }
-    content.append(projectsContainer);
+
+    // add additional button for every new project item 
+
+    let projBtnContainer;
+
+    if (document.querySelector(".each-proj-btn-container")) {
+        projBtnContainer = document.querySelector(".each-proj-btn-container")
+        projBtnContainer.replaceChildren();
+    } else {
+        projBtnContainer = document.createElement("div");
+        projBtnContainer.classList.add("each-proj-btn-container");
+    }
+
+    for (const [index, project] of myProjects.entries()) {
+        const projBtn = document.createElement("button");
+        projBtn.classList.add("each-project-button");
+        projBtn.setAttribute(`id`, `projwxr-${index}-btn`);
+        projBtn.textContent = `${project.projectTitle}`;
+
+        projBtnContainer.append(projBtn);
+    }
+
+    content.append(projectsContainer, projBtnContainer);
 }
 
 

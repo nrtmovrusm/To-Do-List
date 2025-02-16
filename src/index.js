@@ -30,11 +30,17 @@ project1.createProject();
 let project2 = new Project("Sample Project 2", "Description for Sample Project 2");
 project2.createProject();
 
+// 1) initial projects overview page is the home page 
 // document.addEventListener('DOMContentLoaded', projectsOverview()); // this loads up the overview homepage on connect
 
+// // 2) clicking projects overview button pulls up the projects overview page 
+// const projectsOverviewBtn = document.querySelector(".projects-overview-btn");
+// projectsOverviewBtn.addEventListener("click", projectsOverview);
+
+// 3) this will display the specific projects with each button that is clicked 
 displayProjectPage(project1);
 editDialog();
 addItemsToProject();
-sortContainer();
+
 
 export { content, ToDoItem, Project, myProjects };
