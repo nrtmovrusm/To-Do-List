@@ -1,4 +1,5 @@
-import { content, Project, myProjects } from "./index.js";
+import { content, Project, myProjects, project1, project2 } from "./index.js";
+import { displayProjectPage } from "./addItemsToProjects.js";
 
 function projectsOverview() {
     content.replaceChildren();
@@ -53,6 +54,7 @@ function displayProjects() {
     }
 
     // add additional button for every new project item 
+    // need to remove pre-existing buttons after additional ones are created 
 
     let projBtnContainer;
 
@@ -67,11 +69,21 @@ function displayProjects() {
     for (const [index, project] of myProjects.entries()) {
         const projBtn = document.createElement("button");
         projBtn.classList.add("each-project-button");
-        projBtn.setAttribute(`id`, `projwxr-${index}-btn`);
+        projBtn.setAttribute(`id`, `project-${index}-btn`);
         projBtn.textContent = `${project.projectTitle}`;
 
         projBtnContainer.append(projBtn);
     }
+
+    const allProjBtns = projBtnContainer.querySelectorAll(".each-project-button");
+
+    allProjBtns.forEach(specProjBtn => {
+        specProjBtn.addEventListener("click", (e) => {
+            let specificProject = new Project(`${e.target.textContent}`, "Description");
+            console.log(specificProject);
+            displayProjectPage(specificProject);
+        });
+    })
 
     content.append(projectsContainer, projBtnContainer);
 }

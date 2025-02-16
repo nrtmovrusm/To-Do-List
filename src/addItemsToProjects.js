@@ -1,6 +1,11 @@
 import { content } from "./index.js";
 
 function displayProjectPage(project) {
+
+    while (content.firstChild) {
+        content.replaceChildren();
+    }
+
     const projectWithItemsContainer = document.createElement("div");
     projectWithItemsContainer.classList.add("project-with-items-container");
 
@@ -9,6 +14,9 @@ function displayProjectPage(project) {
     projectWithItemsTitle.textContent = `${project.projectTitle}`;
 
     projectWithItemsContainer.append(projectWithItemsTitle);
+
+    editDialog(); //// may be able to just always have the editDialog running in background
+    addItemsToProject();
 
     content.append(projectWithItemsContainer);
 }
@@ -253,7 +261,7 @@ function submitBtnAction() {
     })
 }
 
-// modifying to include sort by priority date AND due date 
+//////////// include 3rd step of sorting by text string vs empty strings to bottom
 
 function sortContainer() {
     const itemsContainer = document.querySelector(".items-container");
