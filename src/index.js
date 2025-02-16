@@ -1,6 +1,6 @@
 import "./styles.css";
 import { projectsOverview } from "./projectsOverview";
-import { displayProjectPage, addItemsToProject, editDialog, } from "./addItemsToProjects";
+import { displayProjectPage, addItemsToProject, editDialog, sortContainer, } from "./addItemsToProjects";
 
 let myProjects = [];
 const content = document.querySelector("div#content")
@@ -35,5 +35,6 @@ project2.createProject();
 displayProjectPage(project1);
 editDialog();
 addItemsToProject();
+sortContainer();
 
 export { content, ToDoItem, Project, myProjects };

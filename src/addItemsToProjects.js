@@ -65,7 +65,7 @@ function addItemsToProject() {
     })
 
     content.append(itemsContainer, addItemsBtn);
-    submitBtnAction()
+    submitBtnAction();
 };
 
 // Handles when pressing "Enter" or "Blur" event occurs after text input into the field
@@ -163,8 +163,6 @@ function editDialog(listItemContainer) {
 
     priorityStatusInput.append(optionHigh, optionNormal, optionLow);
 
-
-
     const dialogBtnsContainer = document.createElement("div");
     dialogBtnsContainer.classList.add("dialog-btns-container");
     
@@ -250,9 +248,38 @@ function submitBtnAction() {
         dueDateDisplay.textContent = dueDateDialog.value;
         priorityStatusDisplay.textContent = priorityStatusDialog.value;
 
+        sortContainer();
         editDialog.close();
     })
 }
 
+function sortContainer() {
+    const itemsContainer = document.querySelector(".items-container");
+    const items = Array.from(itemsContainer.getElementsByClassName("list-item-container"));
 
-export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction }
+    items.sort((a,b) => {
+        const dateA = new Date(a.querySelector(".due-date-div").textContent);
+        const dateB = new Date(b.querySelector(".due-date-div").textContent);
+
+        const isValidDateA = !isNaN(dateA);
+        const isValidDateB = !isNaN(dateB);
+
+        if (!isValidDateA && !isValidDateB) {
+            return 0;
+        } else if (!isValidDateA) {
+            return 1;
+        } else if (!isValidDateB) {
+            return -1;
+        } else {
+            return dateA - dateB;
+        }
+    });
+
+    console.log(items);
+
+    items.forEach(item => itemsContainer.appendChild(item));
+
+}
+
+
+export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction, sortContainer }
