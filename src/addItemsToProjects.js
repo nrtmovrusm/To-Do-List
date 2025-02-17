@@ -126,7 +126,7 @@ function createRemoveItemBtn(newItem, listItemContainer) {
 
 // create editDialog
 
-function editDialog(listItemContainer) { 
+function editDialog() { 
     const editDialog = document.createElement("dialog");
     editDialog.id = "edit-dialog";
     const editForm = document.createElement("form");
@@ -329,4 +329,116 @@ function sortContainer() {
 
 }
 
-export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction, sortContainer }
+//// local storage elements needed to add for the following scenarios
+// use nested objects and stringify and parse JSON code 
+/// 1) when you navigate to another page
+/// 2) when you click projects overview button 
+
+// first function will clear out current storage elements for the specific project 
+// then the project will stringify and store current page elements into local storage for #1 and #2
+// when the page is loaded from the spec proj button the overviews page, it will retrieve the local storage and populate items
+
+function storeToDoList() {
+    if (document.querySelector(".project-with-items-title")) {
+        let key = document.querySelector(".project-with-items-title").textContent;
+
+        // Select all labels / to-do-items that have text content
+
+        const allToDoLabels = document.querySelectorAll('div.list-item-container > label');
+        console.log(allToDoLabels);
+
+        // filter out all to do labels to only those with text content
+        let allToDoLabelsArray = Array.from(allToDoLabels);
+        const labelsWithText = allToDoLabelsArray.filter(task => task.textContent.trim() !== "");
+
+        let projectStorageObject = {};
+
+        console.log(labelsWithText);
+
+        labelsWithText.forEach(label => {
+            let taskNumber = label.id;
+            console.log(taskNumber);
+            const taskDescription = document.querySelector(`label#${taskNumber}`).textContent;
+            const dueDateInObject = document.querySelector(`.due-date-div#${taskNumber}`).textContent;
+            const prioStatusInObject = document.querySelector(`.priority-status-div#${taskNumber}`).textContent;
+
+            projectStorageObject[taskNumber] = {
+                task: taskDescription,
+                dueDate: dueDateInObject,
+                prioStatus: prioStatusInObject
+            };
+
+            // in future to access
+            // projectStorageObject.${taskNumber}.task should return ${taskDescription}
+            // projectStorageObject[taskNumber].task should return ${taskDescription}
+        })
+
+        console.log(projectStorageObject);
+        // stringify object for storing into local storage 
+        let stringifiedObject = JSON.stringify(projectStorageObject);
+
+        // store string into local storage where key is the specific project name 
+        localStorage.setItem(key, stringifiedObject);
+    }
+}
+
+function getToDoList() {
+    if (document.querySelector(".project-with-items-title")) {
+        let key = document.querySelector(".project-with-items-title").textContent;
+
+        let retrievedObject = JSON.parse(localStorage.getItem(key));
+
+        // now need to popuulate the fields with the values from the object 
+
+        //get all of the keys/#tasks from retrieved object
+        const allKeys = Object.keys(retrievedObject);
+
+        const numberOfTasks = Number(allKeys.length);
+
+        const allTasksContainer = document.querySelector(".items-container");
+
+        for (let i=0; i < numberOfTasks; i++) {
+            const newIndividualTaskContainer = document.createElement("div");
+            newIndividualTaskContainer.classList.add("list-item-container");
+            newIndividualTaskContainer.setAttribute(`id`, `task-${i}`);
+
+            const newInput = document.createElement("input");
+            newInput.classList.add("new-task");
+            newInput.setAttribute(`id`, `task-${i}`);
+            newInput.setAttribute("type", "checkbox");
+
+            const newLabel = document.createElement("label");
+            newLabel.setAttribute(`for`, `task-${i}`);
+            newLabel.setAttribute(`id`, `task-${i}`);
+            newLabel.textContent = `${retrievedObject[i].task}`;
+                        
+            const newDueDate = document.createElement("div");
+            newDueDate.classList.add("due-date-div");
+            newDueDate.setAttribute(`id`, `task-${i}`);
+            newDueDate.textContent = `${retrievedObject[i].dueDate}`;
+
+            const newPS = document.createElement("div");
+            newPS.classList.add("priority-status-div");
+            newPS.setAttribute(`id`, `task-${i}`);
+            newPS.textContent = `${retrievedObject[i].prioStatus}`;
+
+            const newEditBtn = document.createElement("button");
+            newEditBtn.classList.add("edit-btn");
+            newEditBtn.setAttribute(`id`, `task-${i}`);
+            newEditBtn.textContent = "Edit";
+
+            const newRemoveBtn = document.createElement("button");
+            newRemoveBtn.classList.add("remove-item-btn");
+            newRemoveBtn.setAttribute(`id`, `task-${i}`);
+            newRemoveBtn.textContent = "X";
+
+            newIndividualTaskContainer.append(newInput, newLabel, newDueDate, newPS, newEditBtn, newRemoveBtn);
+            allTasksContainer.append(newIndividualTaskContainer)
+        }
+
+    }   
+}
+
+
+
+export { displayProjectPage, addItemsToProject, addDescriptionToItems, editDialog, cancelDialogBtn, editBtnAction, sortContainer,storeToDoList, getToDoList }

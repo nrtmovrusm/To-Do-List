@@ -1,5 +1,5 @@
 import { content, Project, myProjects, project1, project2 } from "./index.js";
-import { displayProjectPage } from "./addItemsToProjects.js";
+import { displayProjectPage, getToDoList } from "./addItemsToProjects.js";
 
 function projectsOverview() {
     content.replaceChildren();
@@ -188,7 +188,6 @@ function setDataProjOverview() {
             const projectTitle = projectContainer.querySelector(".project-title").textContent;
 
             localStorage.setItem(`projTitle-${index}`, projectTitle);
-            // localStorage.setItem(`btn-${index}`, index);
         })
     } else {
         console.log("No overview projects found in page to store into localStorage");

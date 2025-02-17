@@ -1,6 +1,6 @@
 import "./styles.css";
 import { projectsOverview, setDataProjOverview } from "./projectsOverview";
-import { displayProjectPage, addItemsToProject, editDialog, sortContainer, } from "./addItemsToProjects";
+import { displayProjectPage, addItemsToProject, editDialog, sortContainer, storeToDoList, getToDoList } from "./addItemsToProjects";
 
 let myProjects = [];
 const content = document.querySelector("div#content")
@@ -43,7 +43,11 @@ projectsOverviewBtn.addEventListener("click", () => {
         setDataProjOverview();
     } else {    // if on a specific project to do list page and not on the overview page 
         // navigate to the projects overview page via function 
-        projectsOverview(); 
+        console.log(`should store to do list`);
+        // storeToDoList(); 
+        projectsOverview(); // this projects overview wipes out my other to do list on specific pages
+        // due to the localStorage.clear function
+
     }
     
 })
