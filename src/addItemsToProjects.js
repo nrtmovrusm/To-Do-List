@@ -134,11 +134,12 @@ function editDialog(listItemContainer) {
 
     const editItemTaskLabel = document.createElement("label");
     editItemTaskLabel.setAttribute("for", "edit-item-task");
-    editItemTaskLabel.textContent = "Task: ";
+    editItemTaskLabel.textContent = "Task (required): ";
 
     const editItemTaskInput = document.createElement("input");
     editItemTaskInput.setAttribute("id", "edit-item-task");
     editItemTaskInput.setAttribute("name", "edit-item-task");
+    editItemTaskInput.required = true;
 
     const dueDateLabel = document.createElement("label");
     dueDateLabel.setAttribute("for", "due-date");
@@ -237,27 +238,33 @@ function submitBtnAction() {
     // this submitBtn ID will be updated with ID by edit button since submit only shows up after edit clicked
     const submitBtn = document.querySelector(".submit-btn"); 
 
+    const editForm = document.querySelector("form");
     const editDialog = document.querySelector("dialog");
     const taskNameDialog = document.querySelector("#edit-item-task");
     const dueDateDialog = document.querySelector("#due-date");
     const priorityStatusDialog = document.querySelector("#priority-status");
 
     submitBtn.addEventListener("click", (e) => {
-        const identification = e.target.id;
-        console.log(`Submit button inside submitBtnAction click listener: ${submitBtn.id} and ${e.target.id}`);
 
-        const inputDisplay = document.querySelector(`input#${identification}`);
-        const labelDisplay = document.querySelector(`label#${identification}`);
-        const dueDateDisplay = document.querySelector(`.due-date-div#${identification}`);
-        const priorityStatusDisplay = document.querySelector(`.priority-status-div#${identification}`);
-        
-        inputDisplay.setAttribute("type", "checkbox");
-        labelDisplay.textContent = taskNameDialog.value;
-        dueDateDisplay.textContent = dueDateDialog.value;
-        priorityStatusDisplay.textContent = priorityStatusDialog.value;
+        if (!editForm.checkValidity()) {
+            alert("Please fill out all of the required elements.");
+        } else {
+            const identification = e.target.id;
+            console.log(`Submit button inside submitBtnAction click listener: ${submitBtn.id} and ${e.target.id}`);
 
-        sortContainer();
-        editDialog.close();
+            const inputDisplay = document.querySelector(`input#${identification}`);
+            const labelDisplay = document.querySelector(`label#${identification}`);
+            const dueDateDisplay = document.querySelector(`.due-date-div#${identification}`);
+            const priorityStatusDisplay = document.querySelector(`.priority-status-div#${identification}`);
+            
+            inputDisplay.setAttribute("type", "checkbox");
+            labelDisplay.textContent = taskNameDialog.value;
+            dueDateDisplay.textContent = dueDateDialog.value;
+            priorityStatusDisplay.textContent = priorityStatusDialog.value;
+
+            sortContainer();
+            editDialog.close();
+        }
     })
 }
 

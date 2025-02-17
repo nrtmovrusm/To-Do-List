@@ -58,6 +58,7 @@ projectsOverviewBtn.addEventListener("click", () => {
 
 ///// add API local storage for the app
 /////// fix up the to do list page to have local storage options 
+///// add option where when you leave pages the DOM will save into local storage 
 ////// add the thing where when DOM loads it will load from your local storage 
 //// make things pretty! 
 
