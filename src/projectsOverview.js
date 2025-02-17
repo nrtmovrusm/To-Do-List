@@ -21,12 +21,15 @@ function displayProjects() {
     let projectsContainer;
 
     if (document.querySelector(".projects-container")) {
-        projectsContainer = document.querySelector(".projects-container")
+        projectsContainer = document.querySelector(".projects-container");
         projectsContainer.replaceChildren();
+
     } else {
         projectsContainer = document.createElement("div");
         projectsContainer.classList.add("projects-container");
     }
+
+    // before myProjects entries need to use getDataProjOverview();
 
     for (const [index, project] of myProjects.entries()) {
         const projectContainer = document.createElement("div");
@@ -81,11 +84,15 @@ function displayProjects() {
         specProjBtn.addEventListener("click", (e) => {
             let specificProject = new Project(`${e.target.textContent}`, "Description");
             console.log(specificProject);
+            setDataProjOverview(); //////////////////////// after specific proj btn nav clicked, set local storage of current data
             displayProjectPage(specificProject);
         });
     })
 
     content.append(projectsContainer, projBtnContainer);
+
+    setDataProjOverview();
+    getDataProjOverview();
 }
 
 
@@ -140,6 +147,8 @@ function addProjects() {
             displayProjects();
             addProjectDialog.returnValue = addedProject.projectTitle;
             addProjectDialog.close();
+
+            setDataProjOverview();
         }
     });
 
@@ -164,4 +173,60 @@ function addProjects() {
     content.append(addProjectBtn, outputBox, addProjectDialog);
 }
 
-export { projectsOverview };
+
+function setDataProjOverview() {
+    // checks to see if youre on the projects overview page with all the containers 
+    // if you are then it will set the projects into localStorage 
+    if (document.querySelector(".project-container")) {
+
+        //clear out the local storage that is existing first
+        localStorage.clear();
+
+        //update localStorage with all the new projects
+        const allProjsOverview = document.querySelectorAll(".project-container");
+        allProjsOverview.forEach((projectContainer, index) => {
+            const projectTitle = projectContainer.querySelector(".project-title").textContent;
+
+            localStorage.setItem(`projTitle-${index}`, projectTitle);
+            // localStorage.setItem(`btn-${index}`, index);
+        })
+    } else {
+        console.log("No overview projects found in page to store into localStorage");
+        localStorage.clear(); //// clearing the remaining last item when removing 
+    }
+}
+
+
+function getDataProjOverview() {
+    // need to get the info stored in localStorage
+    // push it into myProject [ ] using .push( ) to create {projTitle, projDesc} using constructor
+    // the displayProject() should then read the myProjects entries to recreate the page 
+
+    // find number of matching keys in local storage to know how many containers to create
+    let count = 0;
+    for (let i=0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`projTitle`)) {
+            count++;
+        }
+    }
+
+    let numMatchingKeys = count;
+
+    // cant modify the array since it is only getter array but can modify it 
+    // setting length to 0 essentially clears it 
+    myProjects.length = 0;
+
+    for (let j=0; j < numMatchingKeys; j++) {
+        const retrievedProjTitle = localStorage.getItem(`projTitle-${j}`);
+        let projObject = new Project(retrievedProjTitle, "");
+        projObject.createProject();
+        // so now i have created each of the objects from localStorage and pushed the projObject into the myProject array 
+    }
+
+}
+
+// need to add the function to check if localStorage exists and if there is space etc 
+
+
+export { projectsOverview, setDataProjOverview};

@@ -1,5 +1,5 @@
 import "./styles.css";
-import { projectsOverview } from "./projectsOverview";
+import { projectsOverview, setDataProjOverview } from "./projectsOverview";
 import { displayProjectPage, addItemsToProject, editDialog, sortContainer, } from "./addItemsToProjects";
 
 let myProjects = [];
@@ -35,7 +35,19 @@ document.addEventListener('DOMContentLoaded', projectsOverview()); // this loads
 
 // 2) clicking projects overview button pulls up the projects overview page 
 const projectsOverviewBtn = document.querySelector(".projects-overview-btn");
-projectsOverviewBtn.addEventListener("click", projectsOverview);
+// projectsOverviewBtn.addEventListener("click", projectsOverview);
+
+projectsOverviewBtn.addEventListener("click", () => {
+    
+    if (document.querySelector(".projects-container")) { //if you are on the projects overview page 
+        setDataProjOverview();
+    } else {    // if on a specific project to do list page and not on the overview page 
+        // navigate to the projects overview page via function 
+        projectsOverview(); 
+    }
+    
+})
+
 
 // // 3) this will move to the specific projects with each button that is clicked 
 // displayProjectPage(project1);
@@ -45,7 +57,8 @@ projectsOverviewBtn.addEventListener("click", projectsOverview);
 //TO DO LIST:
 
 ///// add API local storage for the app
-////// add to sort the to do list by text vs empty strings 
+/////// fix up the to do list page to have local storage options 
+////// add the thing where when DOM loads it will load from your local storage 
 //// make things pretty! 
 
 
